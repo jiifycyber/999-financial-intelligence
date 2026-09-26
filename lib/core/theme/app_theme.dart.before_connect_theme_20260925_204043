@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // 999 CONNECT DESIGN SYSTEM
-  static const bg = Color(0xFF09060F);
-  static const midnight = Color(0xFF08050C);
+  // XXX DEFENSE-inspired financial command palette
+  static const bg = Color(0xFF01050F);
+  static const midnight = Color(0xFF050B1A);
 
-  static const panel = Color(0xFF10183B);
-  static const panel2 = Color(0xFF071831);
-  static const panelDark = Color(0xFF090D25);
+  static const panel = Color(0xFF071D42);
+  static const panel2 = Color(0xFF092149);
+  static const panelDark = Color(0xFF06142D);
 
-  static const border = Color(0xFF45DFFF);
+  static const border = Color(0xFF315D8A);
 
   static const gold = Color(0xFFE2B84F);
   static const goldSoft = Color(0xFF8D7131);
 
   static const green = Color(0xFF22E89A);
+  static const cyan = Color(0xFF25EDFF);
 
-  // Exact Connect accents
-  static const cyan = Color(0xFF45DFFF);
-  static const purple = Color(0xFF9A62FF);
-  static const purpleBright = Color(0xFFB991FF);
-  static const pink = Color(0xFFFF43CB);
-  static const blue = Color(0xFF48DFFF);
+  static const purple = Color(0xFFA23CFF);
+  static const purpleBright = Color(0xFFD43CFF);
+  static const pink = Color(0xFFFF4D87);
+
+  static const blue = Color(0xFF25AFFF);
 
   static const orange = Color(0xFFFFC857);
-  static const red = Color(0xFFFF536D);
+  static const red = Color(0xFFFF4D5A);
 
-  static const text = Color(0xFFF3F5FA);
-  static const muted = Color(0xFFC2CAE0);
+  static const text = Color(0xFFF3F8FC);
+  static const muted = Color(0xFF9DAAC6);
 
   static ThemeData get dark {
     final scheme = ColorScheme.fromSeed(
@@ -40,7 +40,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF09060F),
+      scaffoldBackgroundColor: bg,
       colorScheme: scheme,
       dividerColor: border,
       cardColor: panel,

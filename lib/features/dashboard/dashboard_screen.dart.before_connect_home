@@ -1,12 +1,9 @@
 import 'dart:ui';
 
-import 'financial_connect_dashboard.dart';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
-import '../../widgets/module_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -28,7 +25,7 @@ class DashboardScreen extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      if (!mobile) const FinancialSidebar(),
+                      if (!mobile) const _DesktopSidebar(),
                       Expanded(
                         child: Container(
                           decoration: const BoxDecoration(
@@ -54,7 +51,7 @@ class DashboardScreen extends StatelessWidget {
                                 constraints: const BoxConstraints(
                                   maxWidth: maxContentWidth,
                                 ),
-                                child: const FinancialConnectDashboard(),
+                                child: const _DashboardContent(),
                               ),
                             ),
                           ),

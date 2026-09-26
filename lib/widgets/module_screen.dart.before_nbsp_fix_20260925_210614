@@ -1,0 +1,1459 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../core/theme/app_theme.dart';
+
+class ModuleScreen extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final List<String> features;
+
+  const ModuleScreen({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.features,
+  });
+
+  IconData get moduleIcon {
+    final t = title.toLowerCase();
+
+    if (t.contains('credit')) return Icons.credit_score_rounded;
+    if (t.contains('funding')) return Icons.account_balance_rounded;
+    if (t.contains('grant')) return Icons.workspace_premium_rounded;
+    if (t.contains('crm')) return Icons.groups_2_rounded;
+    if (t.contains('document')) return Icons.folder_copy_rounded;
+    if (t.contains('analytic')) return Icons.query_stats_rounded;
+    if (t.contains('admin')) return Icons.admin_panel_settings_rounded;
+    if (t.contains('coach') || t.contains('ai')) {
+      return Icons.psychology_alt_rounded;
+    }
+
+    return Icons.auto_awesome_rounded;
+  }
+
+  Color get accent {
+    final t = title.toLowerCase();
+
+    if (t.contains('credit')) return const Color(0xFFB56AFF);
+    if (t.contains('funding')) return const Color(0xFF57CFFF);
+    if (t.contains('grant')) return const Color(0xFFFFBF55);
+    if (t.contains('crm')) return const Color(0xFF51E0D4);
+    if (t.contains('analytic')) return const Color(0xFF55DFFF);
+    if (t.contains('admin')) return const Color(0xFFFF69C9);
+
+    return const Color(0xFFAE72FF);
+  }
+
+  String get category {
+    final t = title.toLowerCase();
+
+    if (t.contains('credit')) return 'CREDIT INTELLIGENCE';
+    if (t.contains('funding')) return 'FUNDING INTELLIGENCE';
+    if (t.contains('grant')) return 'GRANT INTELLIGENCE';
+    if (t.contains('crm')) return 'RELATIONSHIP INTELLIGENCE';
+    if (t.contains('document')) return 'DOCUMENT INTELLIGENCE';
+    if (t.contains('analytic')) return 'FINANCIAL ANALYTICS';
+    if (t.contains('admin')) return 'SYSTEM ADMINISTRATION';
+    if (t.contains('coach') || t.contains('ai')) {
+      return 'AI FINANCIAL INTELLIGENCE';
+    }
+
+    return title.toUpperCase();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF09060F),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final mobile = constraints.maxWidth < 760;
+
+            return Column(
+              children: [
+                _FinancialTopBar(
+                  mobile: mobile,
+                  accent: accent,
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      if (!mobile) const FinancialSidebar(),
+                      Expanded(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF08050C),
+                                Color(0xFF09060F),
+                                Color(0xFF07152E),
+                              ],
+                            ),
+                          ),
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.fromLTRB(
+                              mobile ? 12 : 24,
+                              mobile ? 14 : 22,
+                              mobile ? 12 : 24,
+                              30,
+                            ),
+                            child: Center(
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 1380,
+                                ),
+                                child: _ConnectModulePanel(
+                                  title: title,
+                                  category: category,
+                                  subtitle: subtitle,
+                                  features: features,
+                                  icon: moduleIcon,
+                                  accent: accent,
+                                  mobile: mobile,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (mobile) const FinancialMobileNavigation(),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _FinancialTopBar extends StatelessWidget {
+  final bool mobile;
+  final Color accent;
+
+  const _FinancialTopBar({
+    required this.mobile,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: mobile ? 72 : 82,
+      padding: EdgeInsets.symmetric(
+        horizontal: mobile ? 14 : 24,
+      ),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF09060F),
+            Color(0xFF071025),
+            Color(0xFF0B0921),
+          ],
+        ),
+        border: Border(
+          bottom: BorderSide(
+            color: const Color(0xFF35EAFF)
+                .withValues(alpha: .52),
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF7746FF)
+                .withValues(alpha: .20),
+            blurRadius: 28,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => context.go('/'),
+            borderRadius: BorderRadius.circular(14),
+            child: ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [
+                  Color(0xFFFF55D0),
+                  Color(0xFF9A56FF),
+                  Color(0xFF48DFFF),
+                ],
+              ).createShader(bounds),
+              child: Text(
+                '999',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: mobile ? 30 : 36,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                  height: 1,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: mobile ? 10 : 14),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'FINANCIAL INTELLIGENCE',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: mobile ? 14 : 19,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'AI FINANCIAL GROWTH OPERATING SYSTEM',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: const Color(0xFFB8C5E2),
+                    fontSize: mobile ? 7 : 9,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: .6,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: mobile ? 9 : 13,
+              vertical: mobile ? 7 : 9,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF073D31),
+                  Color(0xFF06251E),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0xFF42FFC0)
+                    .withValues(alpha: .65),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF34FFB0)
+                      .withValues(alpha: .18),
+                  blurRadius: 18,
+                ),
+              ],
+            ),
+            child: const Text(
+              'AI ONLINE',
+              style: TextStyle(
+                color: Color(0xFF53E9B2),
+                fontSize: 8,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          const SizedBox(width: 9),
+          InkWell(
+            onTap: () => context.go('/settings'),
+            borderRadius: BorderRadius.circular(100),
+            child: Container(
+              width: mobile ? 40 : 46,
+              height: mobile ? 40 : 46,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    accent.withValues(alpha: .92),
+                    const Color(0xFF703BFF),
+                  ],
+                ),
+                border: Border.all(
+                  color: const Color(0xFFB991FF)
+                      .withValues(alpha: .70),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: accent.withValues(alpha: .28),
+                    blurRadius: 20,
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.settings_rounded,
+                color: Colors.white,
+                size: 21,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FinancialSidebar extends StatelessWidget {
+  const FinancialSidebar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final current = GoRouterState.of(context).uri.path;
+
+    const entries = [
+      ('Command Center', Icons.dashboard_customize_rounded, '/'),
+      ('Credit Intelligence', Icons.credit_score_rounded, '/credit'),
+      ('Grant Intelligence', Icons.workspace_premium_rounded, '/grants'),
+      ('Business Funding', Icons.account_balance_rounded, '/funding'),
+      ('AI Financial Coach', Icons.psychology_alt_rounded, '/ai-coach'),
+      ('Documents', Icons.folder_copy_rounded, '/documents'),
+      ('CRM', Icons.groups_2_rounded, '/crm'),
+      ('Analytics', Icons.query_stats_rounded, '/analytics'),
+      ('Admin', Icons.admin_panel_settings_rounded, '/admin'),
+    ];
+
+    const accents = [
+      Color(0xFF35EAFF),
+      Color(0xFFB56AFF),
+      Color(0xFFFFBF55),
+      Color(0xFF57CFFF),
+      Color(0xFFAE72FF),
+      Color(0xFF51E0D4),
+      Color(0xFFFF69C9),
+      Color(0xFF55DFFF),
+      Color(0xFFFF536D),
+    ];
+
+    return Container(
+      width: 250,
+      margin: const EdgeInsets.fromLTRB(8, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(9, 12, 9, 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(27),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF06162E),
+            Color(0xFF071025),
+            Color(0xFF0B0921),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0xFF24DFFF)
+              .withValues(alpha: .38),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF5E43FF)
+                .withValues(alpha: .22),
+            blurRadius: 32,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .50),
+            blurRadius: 28,
+            offset: const Offset(8, 0),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(9, 4, 9, 12),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.memory_rounded,
+                  color: Color(0xFF58E8FF),
+                  size: 18,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  '999 FINANCIAL CORE',
+                  style: TextStyle(
+                    color: Color(0xFFDCE6FB),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: .8,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          for (var i = 0; i < entries.length; i++)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: _PremiumSideTile(
+                label: entries[i].$1,
+                icon: entries[i].$2,
+                route: entries[i].$3,
+                accent: accents[i],
+                active: entries[i].$3 == '/'
+                    ? current == '/'
+                    : current.startsWith(entries[i].$3),
+              ),
+            ),
+          const Spacer(),
+          InkWell(
+            onTap: () => context.go('/ai-coach'),
+            borderRadius: BorderRadius.circular(22),
+            child: Container(
+              padding: const EdgeInsets.all(13),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF251056),
+                    Color(0xFF10275C),
+                    Color(0xFF071831),
+                  ],
+                ),
+                border: Border.all(
+                  color: const Color(0xFFB56AFF)
+                      .withValues(alpha: .54),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF934CFF)
+                        .withValues(alpha: .24),
+                    blurRadius: 24,
+                  ),
+                ],
+              ),
+              child: const Row(
+                children: [
+                  CircleAvatar(
+                    radius: 21,
+                    backgroundColor: Color(0xFF32126A),
+                    child: Icon(
+                      Icons.psychology_alt_rounded,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'AGENT DUKE',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'FINANCIAL AI • ONLINE',
+                          style: TextStyle(
+                            color: Color(0xFF53E9B2),
+                            fontSize: 7,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: Color(0xFF8BEAFF),
+                    size: 12,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PremiumSideTile extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final String route;
+  final Color accent;
+  final bool active;
+
+  const _PremiumSideTile({
+    required this.label,
+    required this.icon,
+    required this.route,
+    required this.accent,
+    required this.active,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => context.go(route),
+      borderRadius: BorderRadius.circular(17),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 9),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(17),
+          gradient: active
+              ? LinearGradient(
+                  colors: [
+                    accent.withValues(alpha: .24),
+                    const Color(0xFF11143D),
+                    const Color(0xFF0A1027),
+                  ],
+                )
+              : null,
+          border: Border.all(
+            color: active
+                ? accent.withValues(alpha: .52)
+                : Colors.white.withValues(alpha: .04),
+          ),
+          boxShadow: active
+              ? [
+                  BoxShadow(
+                    color: accent.withValues(alpha: .18),
+                    blurRadius: 20,
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: active
+                      ? [
+                          accent.withValues(alpha: .85),
+                          accent.withValues(alpha: .35),
+                        ]
+                      : [
+                          accent.withValues(alpha: .15),
+                          const Color(0xFF091321),
+                        ],
+                ),
+                border: Border.all(
+                  color: accent.withValues(
+                    alpha: active ? .58 : .18,
+                  ),
+                ),
+                boxShadow: active
+                    ? [
+                        BoxShadow(
+                          color: accent.withValues(alpha: .30),
+                          blurRadius: 14,
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Icon(
+                icon,
+                color: active
+                    ? Colors.white
+                    : accent.withValues(alpha: .82),
+                size: 17,
+              ),
+            ),
+            const SizedBox(width: 9),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: active
+                      ? Colors.white
+                      : const Color(0xFFB9C7E2),
+                  fontSize: 10,
+                  fontWeight:
+                      active ? FontWeight.w900 : FontWeight.w700,
+                ),
+              ),
+            ),
+            if (active)
+              Icon(
+                Icons.chevron_right_rounded,
+                color: accent,
+                size: 17,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ConnectModulePanel extends StatelessWidget {
+  final String title;
+  final String category;
+  final String subtitle;
+  final List<String> features;
+  final IconData icon;
+  final Color accent;
+  final bool mobile;
+
+  const _ConnectModulePanel({
+    required this.title,
+    required this.category,
+    required this.subtitle,
+    required this.features,
+    required this.icon,
+    required this.accent,
+    required this.mobile,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final metrics = _metricsFor(title);
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      padding: EdgeInsets.all(mobile ? 14 : 22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(mobile ? 24 : 30),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF100526),
+            Color(0xFF071838),
+            Color(0xFF031020),
+          ],
+        ),
+        border: Border.all(
+          color: const Color(0xFF3EDBFF)
+              .withValues(alpha: .52),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF783EFF)
+                .withValues(alpha: .20),
+            blurRadius: 42,
+          ),
+          BoxShadow(
+            color: const Color(0xFF20CFFF)
+                .withValues(alpha: .08),
+            blurRadius: 55,
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          const Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(
+                painter: _ModuleGridPainter(),
+              ),
+            ),
+          ),
+          Positioned(
+            top: -90,
+            right: -70,
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: const Color(0xFF3ADFFF)
+                      .withValues(alpha: .13),
+                ),
+              ),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _ModuleHero(
+                title: title,
+                category: category,
+                subtitle: subtitle,
+                icon: icon,
+                accent: accent,
+                mobile: mobile,
+              ),
+              const SizedBox(height: 18),
+              GridView.builder(
+                itemCount: metrics.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: mobile ? 2 : 4,
+                  mainAxisExtent: mobile ? 92 : 105,
+                  crossAxisSpacing: 9,
+                  mainAxisSpacing: 9,
+                ),
+                itemBuilder: (_, index) {
+                  final metric = metrics[index];
+                  return _MetricCard(
+                    label: metric.$1,
+                    value: metric.$2,
+                    detail: metric.$3,
+                    accent: index == metrics.length - 1
+                        ? const Color(0xFF53E9B2)
+                        : accent,
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: accent,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: accent.withValues(alpha: .40),
+                          blurRadius: 12,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'TOOLS & WORKFLOWS',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: .4,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Financial intelligence tools for this module.',
+                          style: TextStyle(
+                            color: Color(0xFF8EA5CE),
+                            fontSize: 8,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              GridView.builder(
+                itemCount: features.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: mobile ? 1 : 2,
+                  mainAxisExtent: 82,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (_, index) {
+                  return _FeatureCard(
+                    feature: features[index],
+                    accent: accent,
+                  );
+                },
+              ),
+              const SizedBox(height: 18),
+              _AgentDukeCommandPanel(
+                moduleTitle: title,
+                accent: accent,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<(String, String, String)> _metricsFor(String title) {
+    final t = title.toLowerCase();
+
+    if (t.contains('credit')) {
+      return const [
+        ('PROFILE', 'READY', 'For analysis'),
+        ('ACCOUNTS', '0', 'Connect data'),
+        ('UTILIZATION', '--', 'Awaiting data'),
+        ('AI STATUS', 'ONLINE', 'Agent Duke ready'),
+      ];
+    }
+
+    if (t.contains('grant')) {
+      return const [
+        ('MATCHES', 'SCAN', 'Find opportunities'),
+        ('SAVED', '0', 'Saved grants'),
+        ('APPLICATIONS', '0', 'In progress'),
+        ('AI STATUS', 'ONLINE', 'Matching ready'),
+      ];
+    }
+
+    if (t.contains('funding')) {
+      return const [
+        ('READINESS', 'SCAN', 'Assess profile'),
+        ('MATCHES', '0', 'Funding sources'),
+        ('APPLICATIONS', '0', 'In progress'),
+        ('AI STATUS', 'ONLINE', 'Funding AI ready'),
+      ];
+    }
+
+    if (t.contains('coach') || t.contains('ai')) {
+      return const [
+        ('AGENTS', 'READY', 'Specialized models'),
+        ('SESSIONS', '0', 'Active sessions'),
+        ('TASKS', '0', 'Queued actions'),
+        ('AI STATUS', 'ONLINE', 'Core active'),
+      ];
+    }
+
+    return const [
+      ('RECORDS', '0', 'Active records'),
+      ('ACTIVITY', 'LIVE', 'System available'),
+      ('TASKS', '0', 'Pending'),
+      ('AI STATUS', 'ONLINE', 'Core ready'),
+    ];
+  }
+}
+
+class _ModuleHero extends StatelessWidget {
+  final String title;
+  final String category;
+  final String subtitle;
+  final IconData icon;
+  final Color accent;
+  final bool mobile;
+
+  const _ModuleHero({
+    required this.title,
+    required this.category,
+    required this.subtitle,
+    required this.icon,
+    required this.accent,
+    required this.mobile,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(mobile ? 16 : 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            accent.withValues(alpha: .20),
+            const Color(0xFF10275C),
+            const Color(0xFF07152E),
+          ],
+        ),
+        border: Border.all(
+          color: accent.withValues(alpha: .52),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: accent.withValues(alpha: .15),
+            blurRadius: 30,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: mobile ? 58 : 70,
+            height: mobile ? 58 : 70,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  accent.withValues(alpha: .95),
+                  const Color(0xFF6A28DB),
+                  const Color(0xFF07152E),
+                ],
+              ),
+              border: Border.all(
+                color: const Color(0xFF7DE9FF),
+                width: 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: accent.withValues(alpha: .38),
+                  blurRadius: 26,
+                ),
+              ],
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: mobile ? 28 : 34,
+            ),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  category,
+                  style: TextStyle(
+                    color: accent,
+                    fontSize: mobile ? 8 : 9,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: mobile ? 21 : 29,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -.3,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: const Color(0xFFB8C5E2),
+                    fontSize: mobile ? 9 : 11,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (!mobile)
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 13,
+                vertical: 9,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF073D31),
+                    Color(0xFF06251E),
+                  ],
+                ),
+                border: Border.all(
+                  color: const Color(0xFF42FFC0)
+                      .withValues(alpha: .60),
+                ),
+              ),
+              child: const Text(
+                'AI READY',
+                style: TextStyle(
+                  color: Color(0xFF53E9B2),
+                  fontSize: 8,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final String detail;
+  final Color accent;
+
+  const _MetricCard({
+    required this.label,
+    required this.value,
+    required this.detail,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(17),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF07162C),
+            Color(0xFF081D39),
+          ],
+        ),
+        border: Border.all(
+          color: accent.withValues(alpha: .30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: accent.withValues(alpha: .08),
+            blurRadius: 18,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Color(0xFF8EA5CE),
+              fontSize: 7,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            detail,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: accent,
+              fontSize: 7,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FeatureCard extends StatelessWidget {
+  final String feature;
+  final Color accent;
+
+  const _FeatureCard({
+    required this.feature,
+    required this.accent,
+  });
+
+  IconData get icon {
+    final f = feature.toLowerCase();
+
+    if (f.contains('credit') || f.contains('score')) {
+      return Icons.credit_score_rounded;
+    }
+    if (f.contains('document')) return Icons.description_rounded;
+    if (f.contains('deadline') || f.contains('reminder')) {
+      return Icons.schedule_rounded;
+    }
+    if (f.contains('payment') || f.contains('billing')) {
+      return Icons.payments_rounded;
+    }
+    if (f.contains('customer') || f.contains('profile')) {
+      return Icons.person_rounded;
+    }
+    if (f.contains('funding') || f.contains('loan')) {
+      return Icons.account_balance_rounded;
+    }
+    if (f.contains('grant')) return Icons.workspace_premium_rounded;
+    if (f.contains('ai') || f.contains('agent')) {
+      return Icons.auto_awesome_rounded;
+    }
+
+    return Icons.bolt_rounded;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 13,
+          vertical: 11,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF071A38),
+              Color(0xFF08142D),
+            ],
+          ),
+          border: Border.all(
+            color: accent.withValues(alpha: .30),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: accent.withValues(alpha: .07),
+              blurRadius: 18,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    accent.withValues(alpha: .68),
+                    accent.withValues(alpha: .18),
+                  ],
+                ),
+                border: Border.all(
+                  color: accent.withValues(alpha: .36),
+                ),
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 19,
+              ),
+            ),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Text(
+                feature,
+                style: const TextStyle(
+                  color: Color(0xFFE1E7FA),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: accent,
+              size: 18,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AgentDukeCommandPanel extends StatelessWidget {
+  final String moduleTitle;
+  final Color accent;
+
+  const _AgentDukeCommandPanel({
+    required this.moduleTitle,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => context.go('/ai-coach'),
+      borderRadius: BorderRadius.circular(22),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF251056),
+              Color(0xFF10275C),
+              Color(0xFF071831),
+            ],
+          ),
+          border: Border.all(
+            color: const Color(0xFFB56AFF)
+                .withValues(alpha: .52),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF934CFF)
+                  .withValues(alpha: .20),
+              blurRadius: 26,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    Color(0xFF9B31FF),
+                    Color(0xFF536EFF),
+                    Color(0xFF07152E),
+                  ],
+                ),
+              ),
+              child: const Icon(
+                Icons.psychology_alt_rounded,
+                color: Colors.white,
+                size: 27,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'AGENT DUKE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    'AI intelligence for $moduleTitle',
+                    style: const TextStyle(
+                      color: Color(0xFFB8C5E2),
+                      fontSize: 8,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  const Text(
+                    'ONLINE',
+                    style: TextStyle(
+                      color: Color(0xFF53E9B2),
+                      fontSize: 7,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: 39,
+              height: 39,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF9B31FF),
+                    Color(0xFF34E8FF),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF8548FF)
+                        .withValues(alpha: .40),
+                    blurRadius: 16,
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FinancialMobileNavigation extends StatelessWidget {
+  const FinancialMobileNavigation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final current = GoRouterState.of(context).uri.path;
+
+    const items = [
+      ('HOME', Icons.home_rounded, '/'),
+      ('CREDIT', Icons.credit_score_rounded, '/credit'),
+      ('GRANTS', Icons.description_rounded, '/grants'),
+      ('FUNDING', Icons.account_balance_rounded, '/funding'),
+      ('AI', Icons.psychology_alt_rounded, '/ai-coach'),
+    ];
+
+    const colors = [
+      Color(0xFF35EAFF),
+      Color(0xFFB56AFF),
+      Color(0xFFFFBF55),
+      Color(0xFF57CFFF),
+      Color(0xFFAE72FF),
+    ];
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+        padding: const EdgeInsets.fromLTRB(6, 6, 6, 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(27),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF06162E),
+              Color(0xFF071025),
+              Color(0xFF0B0921),
+            ],
+          ),
+          border: Border.all(
+            color: const Color(0xFF24DFFF)
+                .withValues(alpha: .46),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF5E43FF)
+                  .withValues(alpha: .24),
+              blurRadius: 30,
+              spreadRadius: 1,
+              offset: const Offset(0, -5),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: .62),
+              blurRadius: 26,
+              offset: const Offset(0, -8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            for (var i = 0; i < items.length; i++)
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    final selected = items[i].$3 == '/'
+                        ? current == '/'
+                        : current.startsWith(items[i].$3);
+
+                    return InkWell(
+                      onTap: () => context.go(items[i].$3),
+                      borderRadius: BorderRadius.circular(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: selected
+                                    ? [
+                                        colors[i],
+                                        const Color(0xFF704CFF),
+                                      ]
+                                    : [
+                                        colors[i]
+                                            .withValues(alpha: .18),
+                                        const Color(0xFF07152E),
+                                      ],
+                              ),
+                              border: Border.all(
+                                color: colors[i].withValues(
+                                  alpha: selected ? .72 : .20,
+                                ),
+                              ),
+                              boxShadow: selected
+                                  ? [
+                                      BoxShadow(
+                                        color: colors[i]
+                                            .withValues(alpha: .34),
+                                        blurRadius: 18,
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                            child: Icon(
+                              items[i].$2,
+                              color: selected
+                                  ? Colors.white
+                                  : const Color(0xFFC2CAE0),
+                              size: 19,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            items[i].$1,
+                            style: TextStyle(
+                              color: selected
+                                  ? const Color(0xFF35EAFF)
+                                  : const Color(0xFFC2CAE0),
+                              fontSize: 7,
+                              fontWeight: selected
+                                  ? FontWeight.w900
+                                  : FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ModuleGridPainter extends CustomPainter {
+  const _ModuleGridPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color =
+          const Color(0xFF4A62B7).withValues(alpha: .08)
+      ..strokeWidth = .7;
+
+    const spacing = 36.0;
+
+    for (double x = 0; x <= size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        paint,
+      );
+    }
+
+    for (double y = 0; y <= size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(
+    covariant _ModuleGridPainter oldDelegate,
+  ) =>
+      false;
+}
